@@ -582,9 +582,9 @@ footer {
  <tr class="toc-level-1"><td class="toc-text"><a href="#Copyright">Copyright</a></td></tr>
  <tr class="toc-level-1"><td class="toc-text"><a href="#Introduction">Introduction</a></td></tr>
  <tr class="toc-level-2"><td class="toc-text"><a href="#Motivations">Motivations</a></td></tr>
- <tr class="toc-level-3"><td class="toc-text"><a href="#Update">Update</a></td></tr>
+ <tr class="toc-level-2"><td class="toc-text"><a href="#grammar_BasePaths_&amp;_actions_BasePathsActions">grammar BasePaths &amp; actions BasePathsActions</a></td></tr>
 </table></div>
-</nav><div id="Gzz::Text::Utils"></div><div class="subtitle"><p>A Raku module to provide text formatting services to Raku programs.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
+</nav><div id="Gzz::Text::Utils"></div><div class="subtitle"><p>A Raku module to provide path parsing and validation for assorted programs.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
 <li><p><a href="#name">NAME</a></p></li>
 <li><p><a href="#author">AUTHOR</a></p></li>
@@ -596,6 +596,7 @@ footer {
 <ul>
 <li><p><a href="#motivations">Motivations</a></p></li>
 </ul>
+<li><p><a href="#grammar-basepaths--actions-basepathsactions">grammar BasePaths &amp; actions BasePathsActions</a></p></li>
 </ul>
 <section>
 <h1 id="Name"><a href="#___top" class="u" title="go to top of document">NAME</a></h1>
@@ -606,14 +607,125 @@ footer {
 <p>LGPL V3.0+ <a href="https://github.com/grizzlysmit/Parse-Paths/blob/main/LICENSE">LICENSE</a></p>
 </section>
 <h1 id="Introduction"><a href="#Gzz::Text::Utils" class="u" title="go to top of document">Introduction</a></h1>
-<p>A Raku module to provide text formatting services to Raku programs.</p><p>Including a sprintf front-end Sprintf that copes better with Ansi highlighted text and implements <strong><code>%U</code></strong> and does octal as <strong><code>0o123</code></strong> or <strong><code>0O123</code></strong> if you choose <strong><code>%O</code></strong> as I hate ambiguity like <strong><code>0123</code></strong> is it an int with leading zeros or an octal number. Also there is <strong><code>%N</code></strong> for a new line and <strong><code>%T</code></strong> for a tab helpful when you want to use single quotes to stop the <strong>&lt;num&gt; <code>$</code></strong> specs needing back slashes.</p><p>And a <strong><code>printf</code></strong> alike <strong><code>Printf</code></strong>.</p><p>Also it does centring and there is a <strong><code>max-width</code></strong> field in the <strong><code>%</code></strong> spec i.e. <strong><code>%*.*.*E</code></strong>, and more.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#Gzz::Text::Utils" class="u" title="go to top of document">Motivations</a></h2>
-<p>When you embed formatting information into your text such as <strong>bold</strong>, <em>italics</em>, etc ... and <strong>colours</strong> standard text formatting will not work e.g. printf, sprintf etc also those functions don't do centring.</p><p>Another important thing to note is that even these functions will fail if you include such formatting in the <strong>text</strong> field unless you supply a copy of the text with out the formatting characters in it in the <strong>:ref</strong> field i.e. <strong><code>left($formatted-text, $width, :ref($unformatted-text))</code></strong> or <strong><code>text($formatted-text, $width, :$ref)</code></strong> if the reference text is in a variable called <strong><code>$ref</code></strong> or you can write it as <strong><code>left($formatted-text, $width, ref =&gt; $unformatted-text)</code></strong></p><p><a href="#able-of-contents">Top of Document</a></p><h3 id="Update"><a href="#Gzz::Text::Utils" class="u" title="go to top of document">Update</a></h3>
-<p>Fixed the proto type of <strong><code>left</code></strong> etc is now </p><pre class="pod-block-code">sub left(Str:D $text, Int:D $width is copy, Str:D $fill = ' ',
-            :&amp;number-of-chars:(Int:D, Int:D --&gt; Bool:D) = &amp;left-global-number-of-chars,
-               Str:D :$ref = strip-ansi($text), Int:D
-                                :$max-width = 0, Str:D :$ellipsis = '' --&gt; Str) is export 
-</pre><p>Where <strong><code>sub strip-ansi(Str:D $text --&gt; Str:D) is export</code></strong> is my new function for striping out ANSI escape sequences so we don't need to supply <strong><code>:$ref</code></strong> unless it contains codes that <strong><code>sub strip-ansi(Str:D $text --&gt; Str:D) is export</code></strong> cannot strip out, if so I would like to know so I can update it to cope with these new codes.</p><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-15T09:31:08Z</span></div></footer>
+<p>A Raku module to provide path parsing and validation services to Raku programs.</p><p>Basically a grammar and a role for inclusion in your own code.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#Gzz::Text::Utils" class="u" title="go to top of document">Motivations</a></h2>
+<p>I need to parse paths a lot in other grammars so I am centralising it.</p><p><a href="#able-of-contents">Top of Document</a></p><h2 id="grammar_BasePaths_&amp;_actions_BasePathsActions"><a href="#Gzz::Text::Utils" class="u" title="go to top of document">grammar BasePaths &amp; actions BasePathsActions</a></h2>
+<pre class="pod-block-code">grammar BasePaths is export {
+    regex base-path           { [ &lt;absolute-path&gt; || &lt;relative-path&gt; ] }
+    regex absolute-path       { &lt;lead-in&gt;  &lt;path-segments&gt;? }
+    regex lead-in             { [ '/' || '~/' || '~' ] }
+    regex relative-path       { &lt;path-segments&gt; }
+    regex path-segments       { &lt;path-segment&gt; [ '/' &lt;path-segment&gt; ]* '/' }
+    token path-segment        { [ &lt;with-space-in-it&gt; || &lt;with-other-stuff&gt; ] }
+    token with-space-in-it    { &lt;with-other-stuff&gt; &lt;trailing-sp-stuff&gt;+ }
+    token trailing-sp-stuff   { &lt;spaces&gt; &lt;tail-other-stuff&gt; }
+    token spaces              { ' '+ }
+    token with-other-stuff    { [ &lt;start-other-stuff&gt; &lt;tail-other-stuff&gt;* || &lt;tail-other-stuff&gt;+ ] }
+    token start-other-stuff   { \w+ }
+    token tail-other-stuff    { &lt;other-stuff&gt;+ &lt;tails-tail&gt;? }
+    token tails-tail          { \w+ }
+    token other-stuff         { [ '-' || '+' || ':' || '@' || '=' || ',' || '&amp;' || '%' || '.' ] }
+}
+
+role BasePathsActions is export {
+    #token with-other-stuff    { [ &lt;start-other-stuff&gt; &lt;tail-other-stuff&gt;* || &lt;tail-other-stuff&gt;+ ] }
+    method with-other-stuff($/) {
+        my $with-other-stuff;
+        my @tailotherstuff;
+        if $/&lt;tail-other-stuff&gt; {
+            @tailotherstuff = $/&lt;tail-other-stuff&gt;».made;
+        }
+        if $/&lt;start-other-stuff&gt; {
+            $with-other-stuff = $/&lt;start-other-stuff&gt;.made ~ @tailotherstuff.join();
+        } else {
+            $with-other-stuff = @tailotherstuff.join();
+        }
+        make $with-other-stuff;
+    }
+    #token editor-name         { &lt;with-other-stuff&gt; }
+    method editor-name($/) {
+        my $edname = $/&lt;with-other-stuff&gt;.made;
+        make $edname;
+    }
+    method lead-in($/) {
+        my $leadin = ~$/;
+        make $leadin;
+    }
+    #token spaces              { ' '+ }
+    method spaces($/) {
+        my $spaces = ~$/;
+        make $spaces;
+    }
+    #token trailing-sp-stuff   { &lt;spaces&gt; &lt;tail-other-stuff&gt; }
+    method trailing-sp-stuff($/) {
+        my $trailing-sp-stuff = $/&lt;spaces&gt;.made ~ $/&lt;tail-other-stuff&gt;.made;
+        make $trailing-sp-stuff;
+    }
+    #token with-space-in-it    { &lt;with-other-stuff&gt; &lt;trailing-sp-stuff&gt;+ }
+    method with-space-in-it($/) {
+        my @trailing = $/&lt;trailing-sp-stuff&gt;».made;
+        my $with-space-in-it = $/&lt;with-other-stuff&gt;.made ~ @trailing.join();
+        make $with-space-in-it;
+    }
+    #token start-other-stuff   { \w+ }
+    method start-other-stuff($/) {
+        my $start-other-stuff = ~$/;
+        make $start-other-stuff;
+    }
+    #token tails-tail          { \w+ }
+    method tails-tail($/) {
+        my $tails-tail = ~$/;
+        make $tails-tail;
+    }
+    #token other-stuff         { [ '-' || '+' || ':' || '@' || '=' || ',' || '%' || '.' ] }
+    method other-stuff($/) {
+        my $other-stuff = ~$/;
+        make $other-stuff;
+    }
+    #token tail-other-stuff    { &lt;other-stuff&gt;+ &lt;tails-tail&gt;? }
+    method tail-other-stuff($/) {
+        my @otherstuff = $/&lt;other-stuff&gt;».made;
+        my $tail-other-stuff = @otherstuff.join();
+        if $/&lt;tails-tail&gt; {
+            $tail-other-stuff ~= $&lt;tails-tail&gt;.made;
+        }
+        make $tail-other-stuff;
+    }
+    #token path-segment        { [ &lt;with-space-in-it&gt; || &lt;with-other-stuff&gt; ] }
+    method path-segment($/) {
+        my $path-segment = ~$/;
+        make $path-segment;
+    }
+    method path-segments($/) {
+        my @path-seg = $/&lt;path-segment&gt;».made;
+        make @path-seg.join('/');
+    }
+    method base-path($/) {
+        my Str $abs-rel-path;
+        if $/&lt;absolute-path&gt; {
+            $abs-rel-path = $/&lt;absolute-path&gt;.made;
+        } elsif $/&lt;relative-path&gt; {
+            $abs-rel-path = $/&lt;relative-path&gt;.made;
+        }
+        make $abs-rel-path;
+    }
+    method absolute-path($/) {
+        my Str $abs-path = $/&lt;lead-in&gt;.made;
+        if $/&lt;path-segments&gt; {
+            $abs-path ~= $/&lt;path-segments&gt;.made;
+        }
+        make $abs-path;
+    }
+    method relative-path($/) {
+        my Str $rel-path = '';
+        if $/&lt;path-segments&gt; {
+            $rel-path ~= $/&lt;path-segments&gt;.made;
+        }
+        make $rel-path;
+    }
+} # role BasePathsActions is export #
+
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-15T09:48:52Z</span></div></footer>
 	</body>
 </html>
 
