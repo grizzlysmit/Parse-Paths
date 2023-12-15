@@ -38,7 +38,7 @@ Francis Grizzly Smit (grizzly@smit.id.au)
 VERSION
 =======
 
-v0.1.1
+v0.1.2
 
 TITLE
 =====
@@ -235,6 +235,8 @@ class PathsActions does BasePathsActions is export {
 } # class PathsActions does BasePathsActions is export #
 ```
 
+[Top of Document](#table-of-contents)
+
 ### check-path(…)
 
 Check that the path is valid.
@@ -248,4 +250,6 @@ sub check-path(Str:D $path --> Str:D) is export {
     return $result;
 } # sub check-path(Str:D $path --> Str:D) is export #
 ```
+
+[Top of Document](#table-of-contents)
 

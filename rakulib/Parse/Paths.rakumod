@@ -1,4 +1,4 @@
-unit module Parse::Paths:ver<0.1.1>:auth<Francis Grizzly Smit (grizzly@smit.id.au)>;
+unit module Parse::Paths:ver<0.1.2>:auth<Francis Grizzly Smit (grizzly@smit.id.au)>;
 
 =begin pod
 
@@ -23,7 +23,7 @@ Table of  Contents
 
 =NAME Parse::Paths 
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
-=VERSION v0.1.1
+=VERSION v0.1.2
 =TITLE Parse::Paths
 =SUBTITLE A Raku module to provide path parsing and validation for assorted programs.
 
@@ -364,6 +364,8 @@ class PathsActions does BasePathsActions is export {
 
 =begin pod
 
+L<Top of Document|#table-of-contents>
+
 =head3 check-path(…)
 
 Check that the path is valid.
@@ -379,6 +381,8 @@ sub check-path(Str:D $path --> Str:D) is export {
 } # sub check-path(Str:D $path --> Str:D) is export #
 
 =end code
+
+L<Top of Document|#table-of-contents>
 
 =end pod
 
