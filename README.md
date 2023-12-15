@@ -71,6 +71,20 @@ I need to parse paths a lot in other grammars so I am centralising it.
 
 [Top of Document](#table-of-contents)
 
+BadPath
+-------
+
+**`BadPath`** is an exception for when paths don't parse.
+
+```raku
+class BadPath is Exception is export {
+    has Str:D $.msg = 'Error: Highlighter Failed.';
+    method message( --> Str:D) {
+        $!msg;
+    }
+}
+```
+
 Grammars
 ========
 
@@ -223,7 +237,15 @@ class PathsActions does BasePathsActions is export {
 
 ### check-path(…)
 
-```raku
+Check that the path is valid.
 
+```raku
+sub check-path(Str:D $path --> Str:D) is export {
+    my $actions = PathsActions;
+    my $tmp = Paths.parse($path, :enc('UTF-8'), :$actions).made;
+    BadPath.new(:msg("Error: path $path did not parse.")).throw if $tmp === Any;
+    my Str:D $result = $tmp;
+    return $result;
+} # sub check-path(Str:D $path --> Str:D) is export #
 ```
 

@@ -55,6 +55,22 @@ Top of Document [#table-of-contents]
 I need to parse paths a lot in other grammars so I am centralising it\&.
 
 Top of Document [#table-of-contents]
+.SS BadPath
+
+\fBBadPath\fR is an exception for when paths don't parse\&.
+
+.RS 4m
+.EX
+class BadPath is Exception is export {
+    has Str:D $\&.msg = 'Error: Highlighter Failed\&.';
+    method message( \-\-> Str:D) {
+        $!msg;
+    }
+}
+
+
+.EE
+.RE
 .SH Grammars
 .SS grammar BasePaths & actions BasePathsActions
 
@@ -210,8 +226,18 @@ class PathsActions does BasePathsActions is export {
 .RE
 .SS check\-path(…)
 
+Check that the path is valid\&.
+
 .RS 4m
 .EX
+sub check\-path(Str:D $path \-\-> Str:D) is export {
+    my $actions = PathsActions;
+    my $tmp = Paths\&.parse($path, :enc('UTF\-8'), :$actions)\&.made;
+    BadPath\&.new(:msg("Error: path $path did not parse\&."))\&.throw if $tmp === Any;
+    my Str:D $result = $tmp;
+    return $result;
+} # sub check\-path(Str:D $path \-\-> Str:D) is export #
+
 
 .EE
 .RE

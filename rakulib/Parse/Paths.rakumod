@@ -44,6 +44,32 @@ I need to parse paths a lot in other grammars so I am centralising it.
 
 L<Top of Document|#table-of-contents>
 
+=head2 BadPath
+
+B<C<BadPath>> is an exception for when paths don't parse.
+
+=begin code :lang<raku>
+
+class BadPath is Exception is export {
+    has Str:D $.msg = 'Error: Highlighter Failed.';
+    method message( --> Str:D) {
+        $!msg;
+    }
+}
+
+=end code
+
+=end pod
+
+class BadPath is Exception is export {
+    has Str:D $.msg = 'Error: Highlighter Failed.';
+    method message( --> Str:D) {
+        $!msg;
+    }
+}
+
+=begin pod
+
 =head1 Grammars
 
 =head2 grammar BasePaths & actions BasePathsActions
@@ -340,7 +366,17 @@ class PathsActions does BasePathsActions is export {
 
 =head3 check-path(…)
 
+Check that the path is valid.
+
 =begin code :lang<raku>
+
+sub check-path(Str:D $path --> Str:D) is export {
+    my $actions = PathsActions;
+    my $tmp = Paths.parse($path, :enc('UTF-8'), :$actions).made;
+    BadPath.new(:msg("Error: path $path did not parse.")).throw if $tmp === Any;
+    my Str:D $result = $tmp;
+    return $result;
+} # sub check-path(Str:D $path --> Str:D) is export #
 
 =end code
 
@@ -349,6 +385,7 @@ class PathsActions does BasePathsActions is export {
 sub check-path(Str:D $path --> Str:D) is export {
     my $actions = PathsActions;
     my $tmp = Paths.parse($path, :enc('UTF-8'), :$actions).made;
+    BadPath.new(:msg("Error: path $path did not parse.")).throw if $tmp === Any;
     my Str:D $result = $tmp;
     return $result;
 } # sub check-path(Str:D $path --> Str:D) is export #

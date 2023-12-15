@@ -582,6 +582,7 @@ footer {
  <tr class="toc-level-1"><td class="toc-text"><a href="#Copyright">Copyright</a></td></tr>
  <tr class="toc-level-1"><td class="toc-text"><a href="#Introduction">Introduction</a></td></tr>
  <tr class="toc-level-2"><td class="toc-text"><a href="#Motivations">Motivations</a></td></tr>
+ <tr class="toc-level-2"><td class="toc-text"><a href="#BadPath">BadPath</a></td></tr>
  <tr class="toc-level-1"><td class="toc-text"><a href="#Grammars">Grammars</a></td></tr>
  <tr class="toc-level-2"><td class="toc-text"><a href="#grammar_BasePaths_&amp;_actions_BasePathsActions">grammar BasePaths &amp; actions BasePathsActions</a></td></tr>
  <tr class="toc-level-3"><td class="toc-text"><a href="#grammar_Paths_&amp;_actions_class_PathsActions">grammar Paths &amp; actions class PathsActions</a></td></tr>
@@ -616,7 +617,15 @@ footer {
 </section>
 <h1 id="Introduction"><a href="#Parse::Paths" class="u" title="go to top of document">Introduction</a></h1>
 <p>A Raku module to provide path parsing and validation services to Raku programs.</p><p>Basically a grammar and a role for inclusion in your own code.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#Parse::Paths" class="u" title="go to top of document">Motivations</a></h2>
-<p>I need to parse paths a lot in other grammars so I am centralising it.</p><p><a href="#table-of-contents">Top of Document</a></p><h1 id="Grammars"><a href="#Parse::Paths" class="u" title="go to top of document">Grammars</a></h1>
+<p>I need to parse paths a lot in other grammars so I am centralising it.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="BadPath"><a href="#Parse::Paths" class="u" title="go to top of document">BadPath</a></h2>
+<p><strong><code>BadPath</code></strong> is an exception for when paths don't parse.</p><pre class="pod-block-code">class BadPath is Exception is export {
+    has Str:D $.msg = 'Error: Highlighter Failed.';
+    method message( --&gt; Str:D) {
+        $!msg;
+    }
+}
+
+</pre></section><section name="pod"><h1 id="Grammars"><a href="#Parse::Paths" class="u" title="go to top of document">Grammars</a></h1>
 <h2 id="grammar_BasePaths_&amp;_actions_BasePathsActions"><a href="#Parse::Paths" class="u" title="go to top of document">grammar BasePaths &amp; actions BasePathsActions</a></h2>
 <p>A grammar action pair to act as a basis of path parsing. See <strong><code>GUI::Editors</code></strong> and <strong><code>Usage::Utils</code></strong> for other examples. </p><pre class="pod-block-code">grammar BasePaths is export {
     regex base-path           { [ &lt;absolute-path&gt; || &lt;relative-path&gt; ] }
@@ -752,8 +761,16 @@ class PathsActions does BasePathsActions is export {
 } # class PathsActions does BasePathsActions is export #
 
 </pre></section><section name="pod"><h3 id="check-path(…)"><a href="#Parse::Paths" class="u" title="go to top of document">check-path(…)</a></h3>
-<pre class="pod-block-code"></pre></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-15T15:45:24Z</span></div></footer>
+<p>Check that the path is valid.</p><pre class="pod-block-code">sub check-path(Str:D $path --&gt; Str:D) is export {
+    my $actions = PathsActions;
+    my $tmp = Paths.parse($path, :enc('UTF-8'), :$actions).made;
+    BadPath.new(:msg(&quot;Error: path $path did not parse.&quot;)).throw if $tmp === Any;
+    my Str:D $result = $tmp;
+    return $result;
+} # sub check-path(Str:D $path --&gt; Str:D) is export #
+
+</pre></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-15T16:02:29Z</span></div></footer>
 	</body>
 </html>
 
