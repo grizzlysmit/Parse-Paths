@@ -582,7 +582,10 @@ footer {
  <tr class="toc-level-1"><td class="toc-text"><a href="#Copyright">Copyright</a></td></tr>
  <tr class="toc-level-1"><td class="toc-text"><a href="#Introduction">Introduction</a></td></tr>
  <tr class="toc-level-2"><td class="toc-text"><a href="#Motivations">Motivations</a></td></tr>
+ <tr class="toc-level-1"><td class="toc-text"><a href="#Grammars">Grammars</a></td></tr>
  <tr class="toc-level-2"><td class="toc-text"><a href="#grammar_BasePaths_&amp;_actions_BasePathsActions">grammar BasePaths &amp; actions BasePathsActions</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#grammar_Paths_&amp;_actions_class_PathsActions">grammar Paths &amp; actions class PathsActions</a></td></tr>
+ <tr class="toc-level-3"><td class="toc-text"><a href="#check-path(…)">check-path(…)</a></td></tr>
 </table></div>
 </nav><div id="Parse::Paths"></div><div class="subtitle"><p>A Raku module to provide path parsing and validation for assorted programs.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
@@ -596,7 +599,12 @@ footer {
 <ul>
 <li><p><a href="#motivations">Motivations</a></p></li>
 </ul>
+<li><p><a href="#grammars">Grammars</a></p></li>
+<ul>
 <li><p><a href="#grammar-basepaths--actions-basepathsactions">grammar BasePaths &amp; actions BasePathsActions</a></p></li>
+<li><p><a href="#grammar-paths--actions-class-pathsactions">grammar Paths &amp; actions class PathsActions</a></p></li>
+</ul>
+<li><p><a href="#check-path">check-path(…)</a></p></li>
 </ul>
 <section>
 <h1 id="Name"><a href="#___top" class="u" title="go to top of document">NAME</a></h1>
@@ -608,8 +616,9 @@ footer {
 </section>
 <h1 id="Introduction"><a href="#Parse::Paths" class="u" title="go to top of document">Introduction</a></h1>
 <p>A Raku module to provide path parsing and validation services to Raku programs.</p><p>Basically a grammar and a role for inclusion in your own code.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#Parse::Paths" class="u" title="go to top of document">Motivations</a></h2>
-<p>I need to parse paths a lot in other grammars so I am centralising it.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="grammar_BasePaths_&amp;_actions_BasePathsActions"><a href="#Parse::Paths" class="u" title="go to top of document">grammar BasePaths &amp; actions BasePathsActions</a></h2>
-<pre class="pod-block-code">grammar BasePaths is export {
+<p>I need to parse paths a lot in other grammars so I am centralising it.</p><p><a href="#table-of-contents">Top of Document</a></p><h1 id="Grammars"><a href="#Parse::Paths" class="u" title="go to top of document">Grammars</a></h1>
+<h2 id="grammar_BasePaths_&amp;_actions_BasePathsActions"><a href="#Parse::Paths" class="u" title="go to top of document">grammar BasePaths &amp; actions BasePathsActions</a></h2>
+<p>A grammar action pair to act as a basis of path parsing. See <strong><code>GUI::Editors</code></strong> and <strong><code>Usage::Utils</code></strong> for other examples. </p><pre class="pod-block-code">grammar BasePaths is export {
     regex base-path           { [ &lt;absolute-path&gt; || &lt;relative-path&gt; ] }
     regex absolute-path       { &lt;lead-in&gt;  &lt;path-segments&gt;? }
     regex lead-in             { [ '/' || '~/' || '~' ] }
@@ -724,8 +733,27 @@ role BasePathsActions is export {
     }
 } # role BasePathsActions is export #
 
-</pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-15T10:54:35Z</span></div></footer>
+</pre><p><a href="#table-of-contents">Top of Document</a></p></section><section name="pod"><h3 id="grammar_Paths_&amp;_actions_class_PathsActions"><a href="#Parse::Paths" class="u" title="go to top of document">grammar Paths &amp; actions class PathsActions</a></h3>
+<p>A front end that uses BasePaths &amp; BasePathsActions to implement a path parser.</p><pre class="pod-block-code">grammar Paths is BasePaths is export {
+    TOP    { [ &lt;base-path&gt; &lt;path-segment&gt;? || &lt;path-segment&gt; ] }
+}
+
+class PathsActions does BasePathsActions is export {
+    method TOP($made) {
+        my $top = '';
+        if $made&lt;base-path&gt; {
+            $top ~= $made&lt;base-path&gt;.made;
+        }
+        if $made&lt;path-segment&gt; {
+            $top ~= $made&lt;path-segment&gt;.made;
+        }
+        $made.make: $top;
+    }
+} # class PathsActions does BasePathsActions is export #
+
+</pre></section><section name="pod"><h3 id="check-path(…)"><a href="#Parse::Paths" class="u" title="go to top of document">check-path(…)</a></h3>
+<pre class="pod-block-code"></pre></section>		</div>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-15T15:44:32Z</span></div></footer>
 	</body>
 </html>
 

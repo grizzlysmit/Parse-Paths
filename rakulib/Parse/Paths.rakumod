@@ -8,15 +8,18 @@ Table of  Contents
 
 =end head2
 
-=item L<NAME|#name>
-=item L<AUTHOR|#author>
-=item L<VERSION|#version>
-=item L<TITLE|#title>
-=item L<SUBTITLE|#subtitle>
-=item L<COPYRIGHT|#copyright>
-=item L<Introduction|#introduction>
+=item1 L<NAME|#name>
+=item1 L<AUTHOR|#author>
+=item1 L<VERSION|#version>
+=item1 L<TITLE|#title>
+=item1 L<SUBTITLE|#subtitle>
+=item1 L<COPYRIGHT|#copyright>
+=item1 L<Introduction|#introduction>
 =item2 L<Motivations|#motivations>
-=item L<grammar BasePaths & actions BasePathsActions|#grammar-basepaths--actions-basepathsactions>
+=item1 L<Grammars|#grammars>
+=item2 L<grammar BasePaths & actions BasePathsActions|#grammar-basepaths--actions-basepathsactions>
+=item2 L<grammar Paths & actions class PathsActions|#grammar-paths--actions-class-pathsactions>
+=item1 L<check-path(…)|#check-path>
 
 =NAME Parse::Paths 
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
@@ -41,7 +44,12 @@ I need to parse paths a lot in other grammars so I am centralising it.
 
 L<Top of Document|#table-of-contents>
 
+=head1 Grammars
+
 =head2 grammar BasePaths & actions BasePathsActions
+
+A grammar action pair to act as a basis of path parsing.
+See B<C<GUI::Editors>> and B<C<Usage::Utils>> for other examples. 
 
 =begin code :lang<raku>
 
@@ -269,16 +277,78 @@ role BasePathsActions is export {
     method absolute-path($/) {
         my Str $abs-path = $/<lead-in>.made;
         if $/<path-segments> {
-            $abs-path ~= $/<path-segments>.made;
+            $abs-path ~= $/<path-segments>.made ~ '/';
         }
         make $abs-path;
     }
     method relative-path($/) {
         my Str $rel-path = '';
         if $/<path-segments> {
-            $rel-path ~= $/<path-segments>.made;
+            $rel-path ~= $/<path-segments>.made ~ '/';
         }
         make $rel-path;
     }
 } # role BasePathsActions is export #
 
+=begin pod
+
+=head3 grammar Paths & actions class PathsActions
+
+A front end that uses BasePaths & BasePathsActions to implement a path parser.
+
+=begin code :lang<raku>
+
+grammar Paths is BasePaths is export {
+    TOP    { [ <base-path> <path-segment>? || <path-segment> ] }
+}
+
+class PathsActions does BasePathsActions is export {
+    method TOP($made) {
+        my $top = '';
+        if $made<base-path> {
+            $top ~= $made<base-path>.made;
+        }
+        if $made<path-segment> {
+            $top ~= $made<path-segment>.made;
+        }
+        $made.make: $top;
+    }
+} # class PathsActions does BasePathsActions is export #
+
+=end code
+
+=end pod
+
+grammar Paths is BasePaths is export {
+    token TOP    { ^ [ <base-path> <path-segment>? || <path-segment> ] $ }
+}
+
+class PathsActions does BasePathsActions is export {
+    method TOP($made) {
+        my $top = '';
+        if $made<base-path> {
+            $top ~= $made<base-path>.made;
+        }
+        if $made<path-segment> {
+            $top ~= $made<path-segment>.made;
+        }
+        $made.make: $top;
+    }
+} # class PathsActions does BasePathsActions is export #
+
+=begin pod
+
+=head3 check-path(…)
+
+=begin code :lang<raku>
+
+=end code
+
+=end pod
+
+sub check-path(Str:D $path --> Str:D) is export {
+    my $actions = PathsActions;
+    my $tmp = Paths.parse($path, :enc('UTF-8'), :$actions).made;
+    my Str:D $result = $tmp;
+    return $result;
+} # sub check-path(Str:D $path --> Str:D) is export #

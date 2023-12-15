@@ -2,6 +2,8 @@ use Test;
 
 use Parse::Paths;
 
-ok(1, 1);
+plan 1;
+
+is(check-path('/home/fred/.bashrc'), '/home/fred/.bashrc');
 
 done-testing;

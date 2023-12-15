@@ -17,7 +17,13 @@ Table of Contents
 
     * [Motivations](#motivations)
 
-  * [grammar BasePaths & actions BasePathsActions](#grammar-basepaths--actions-basepathsactions)
+  * [Grammars](#grammars)
+
+    * [grammar BasePaths & actions BasePathsActions](#grammar-basepaths--actions-basepathsactions)
+
+    * [grammar Paths & actions class PathsActions](#grammar-paths--actions-class-pathsactions)
+
+  * [check-path(…)](#check-path)
 
 NAME
 ====
@@ -65,8 +71,13 @@ I need to parse paths a lot in other grammars so I am centralising it.
 
 [Top of Document](#table-of-contents)
 
+Grammars
+========
+
 grammar BasePaths & actions BasePathsActions
 --------------------------------------------
+
+A grammar action pair to act as a basis of path parsing. See **`GUI::Editors`** and **`Usage::Utils`** for other examples. 
 
 ```raku
 grammar BasePaths is export {
@@ -186,4 +197,33 @@ role BasePathsActions is export {
 ```
 
 [Top of Document](#table-of-contents)
+
+### grammar Paths & actions class PathsActions
+
+A front end that uses BasePaths & BasePathsActions to implement a path parser.
+
+```raku
+grammar Paths is BasePaths is export {
+    TOP    { [ <base-path> <path-segment>? || <path-segment> ] }
+}
+
+class PathsActions does BasePathsActions is export {
+    method TOP($made) {
+        my $top = '';
+        if $made<base-path> {
+            $top ~= $made<base-path>.made;
+        }
+        if $made<path-segment> {
+            $top ~= $made<path-segment>.made;
+        }
+        $made.make: $top;
+    }
+} # class PathsActions does BasePathsActions is export #
+```
+
+### check-path(…)
+
+```raku
+
+```
 
