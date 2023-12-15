@@ -39,7 +39,7 @@ L<Top of Document|#table-of-contents>
 
 I need to parse paths a lot in other grammars so I am centralising it.
 
-L<Top of Document|#able-of-contents>
+L<Top of Document|#table-of-contents>
 
 =head2 grammar BasePaths & actions BasePathsActions
 

@@ -63,7 +63,7 @@ Motivations
 
 I need to parse paths a lot in other grammars so I am centralising it.
 
-[Top of Document](#able-of-contents)
+[Top of Document](#table-of-contents)
 
 grammar BasePaths & actions BasePathsActions
 --------------------------------------------
