@@ -18,7 +18,7 @@
         "bugtracker": "https://github.com/grizzlysmit/Parse-Paths/issues"
     },
     "auth": "zef:grizzlysmit",
-    "version" : "0.1.0",
+    "version" : "0.1.1",
     "tags" : [ "path", "parsing", "paths", "parse" ],
   "test-depends": [
   ]
