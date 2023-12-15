@@ -22,7 +22,7 @@ Table of Contents
 NAME
 ====
 
-Gzz::Text::Utils 
+Parse::Paths 
 
 AUTHOR
 ======
@@ -37,7 +37,7 @@ v0.1.0
 TITLE
 =====
 
-Gzz::Text::Utils
+Parse::Paths
 
 SUBTITLE
 ========

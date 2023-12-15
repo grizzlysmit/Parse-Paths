@@ -18,10 +18,10 @@ Table of  Contents
 =item2 L<Motivations|#motivations>
 =item L<grammar BasePaths & actions BasePathsActions|#grammar-basepaths--actions-basepathsactions>
 
-=NAME Gzz::Text::Utils 
+=NAME Parse::Paths 
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
 =VERSION v0.1.0
-=TITLE Gzz::Text::Utils
+=TITLE Parse::Paths
 =SUBTITLE A Raku module to provide path parsing and validation for assorted programs.
 
 =COPYRIGHT

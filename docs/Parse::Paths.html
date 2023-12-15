@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<title>Gzz::Text::Utils</title>
+<title>Parse::Paths</title>
 <meta charset="UTF-8" />
 <link href="data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAA/wAAAP8AAACGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAABA
@@ -575,7 +575,7 @@ footer {
 		<rect x="551.153" y="428.32" transform="matrix(0.4226 -0.9063 0.9063 0.4226 -70.9303 749.6747)" stroke="#000000" stroke-width="1.0588" stroke-miterlimit="10" width="3.517" height="4.372"/>
 </g>
 </svg>
-<h1 class="title">Gzz::Text::Utils</h1></header><div class="pod-content"><nav><div id="TOC"><table>
+<h1 class="title">Parse::Paths</h1></header><div class="pod-content"><nav><div id="TOC"><table>
 <caption>Table of Contents</caption>
 <tr class="toc-level-2"><td class="toc-text"><a href="#Table_of_Contents">Table of Contents</a></td></tr>
  <tr class="toc-level-1"><td class="toc-text"><a href="#Name">Name</a></td></tr>
@@ -584,7 +584,7 @@ footer {
  <tr class="toc-level-2"><td class="toc-text"><a href="#Motivations">Motivations</a></td></tr>
  <tr class="toc-level-2"><td class="toc-text"><a href="#grammar_BasePaths_&amp;_actions_BasePathsActions">grammar BasePaths &amp; actions BasePathsActions</a></td></tr>
 </table></div>
-</nav><div id="Gzz::Text::Utils"></div><div class="subtitle"><p>A Raku module to provide path parsing and validation for assorted programs.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
+</nav><div id="Parse::Paths"></div><div class="subtitle"><p>A Raku module to provide path parsing and validation for assorted programs.</p></div><div class="pod-body"><section name="___top"><h2 id="Table_of_Contents"><a href="#___top" class="u" title="go to top of document">Table of Contents</a></h2>
 <ul>
 <li><p><a href="#name">NAME</a></p></li>
 <li><p><a href="#author">AUTHOR</a></p></li>
@@ -600,15 +600,15 @@ footer {
 </ul>
 <section>
 <h1 id="Name"><a href="#___top" class="u" title="go to top of document">NAME</a></h1>
-<p>Gzz::Text::Utils </p>
+<p>Parse::Paths </p>
 </section>
 <section>
-<h1 id="Copyright"><a href="#Gzz::Text::Utils" class="u" title="go to top of document">COPYRIGHT</a></h1>
+<h1 id="Copyright"><a href="#Parse::Paths" class="u" title="go to top of document">COPYRIGHT</a></h1>
 <p>LGPL V3.0+ <a href="https://github.com/grizzlysmit/Parse-Paths/blob/main/LICENSE">LICENSE</a></p>
 </section>
-<h1 id="Introduction"><a href="#Gzz::Text::Utils" class="u" title="go to top of document">Introduction</a></h1>
-<p>A Raku module to provide path parsing and validation services to Raku programs.</p><p>Basically a grammar and a role for inclusion in your own code.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#Gzz::Text::Utils" class="u" title="go to top of document">Motivations</a></h2>
-<p>I need to parse paths a lot in other grammars so I am centralising it.</p><p><a href="#able-of-contents">Top of Document</a></p><h2 id="grammar_BasePaths_&amp;_actions_BasePathsActions"><a href="#Gzz::Text::Utils" class="u" title="go to top of document">grammar BasePaths &amp; actions BasePathsActions</a></h2>
+<h1 id="Introduction"><a href="#Parse::Paths" class="u" title="go to top of document">Introduction</a></h1>
+<p>A Raku module to provide path parsing and validation services to Raku programs.</p><p>Basically a grammar and a role for inclusion in your own code.</p><p><a href="#table-of-contents">Top of Document</a></p><h2 id="Motivations"><a href="#Parse::Paths" class="u" title="go to top of document">Motivations</a></h2>
+<p>I need to parse paths a lot in other grammars so I am centralising it.</p><p><a href="#able-of-contents">Top of Document</a></p><h2 id="grammar_BasePaths_&amp;_actions_BasePathsActions"><a href="#Parse::Paths" class="u" title="go to top of document">grammar BasePaths &amp; actions BasePathsActions</a></h2>
 <pre class="pod-block-code">grammar BasePaths is export {
     regex base-path           { [ &lt;absolute-path&gt; || &lt;relative-path&gt; ] }
     regex absolute-path       { &lt;lead-in&gt;  &lt;path-segments&gt;? }
@@ -725,7 +725,7 @@ role BasePathsActions is export {
 } # role BasePathsActions is export #
 
 </pre><p><a href="#table-of-contents">Top of Document</a></p></section>		</div>
-</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-15T10:14:58Z</span></div></footer>
+</div><footer><div>Rendered from <span class="path">UNNAMED</span></div><div>at <span class="time">2023-12-15T10:17:18Z</span></div></footer>
 	</body>
 </html>
 
