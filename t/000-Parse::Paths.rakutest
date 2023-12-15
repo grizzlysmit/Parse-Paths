@@ -1,0 +1,7 @@
+use Test;
+
+use Parse::Paths;
+
+ok(1, 1);
+
+done-testing;
