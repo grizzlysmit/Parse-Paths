@@ -1,4 +1,4 @@
-unit module Parse::Paths:ver<0.1.2>:auth<Francis Grizzly Smit (grizzly@smit.id.au)>;
+unit module Parse::Paths:ver<0.1.3>:auth<Francis Grizzly Smit (grizzly@smit.id.au)>;
 
 =begin pod
 
@@ -23,7 +23,7 @@ Table of  Contents
 
 =NAME Parse::Paths 
 =AUTHOR Francis Grizzly Smit (grizzly@smit.id.au)
-=VERSION v0.1.2
+=VERSION v0.1.3
 =TITLE Parse::Paths
 =SUBTITLE A Raku module to provide path parsing and validation for assorted programs.
 
