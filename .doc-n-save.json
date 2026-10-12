@@ -1,0 +1,15 @@
+{
+    "markdown-path": "README.md",
+    "additional-pod-files": [
+    ],
+    "exts": [
+        "rakumod"
+    ],
+    "lib": "rakulib/",
+    "name": "Parse::Paths",
+    "comment": "correct saome minor stuff",
+    "separate-markdown-files": false,
+    "only-app": false,
+    "bin": "bin",
+    "docs": "docs"
+}
